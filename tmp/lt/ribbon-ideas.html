@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --primary: #1E6FE8;
+    --deep-1: #0E3A8C;
+    --deep-2: #0A2B6B;
+    --navy: #0B2452;
+    --ice: #9ec2ff;
+    --orange: #F07C1F;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Public Sans", sans-serif; background: #eef2f7; padding: 40px 0 80px; }
+  h1 { font-family: "Fraunces", serif; color: #0B2452; font-size: 30px; text-align: center; margin-bottom: 6px; }
+  .sub { text-align: center; color: #5a6b85; font-size: 13px; margin-bottom: 36px; }
+  .stage { width: 1100px; margin: 0 auto 56px; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 40px rgba(11,36,82,.14); }
+  .label { width: 1100px; margin: 0 auto 10px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #5a6b85; }
+  /* fake page content above each ribbon so you see it in context */
+  .context { background: #f7f9fc; padding: 26px 34px 30px; border-bottom: 1px solid #e3e9f2; }
+  .context.dark { background: linear-gradient(160deg, #0E3A8C, #08214f); }
+  .context .card { background: #fff; border-radius: 10px; height: 54px; box-shadow: 0 1px 3px rgba(11,36,82,.08); margin-bottom: 12px; }
+  .context .card:last-child { margin-bottom: 0; }
+  .ribbon { position: relative; color: #fff; }
+  .icon { flex: none; }
+
+  /* A — current: statement over caps */
+  .rA { background: linear-gradient(90deg, var(--deep-1), var(--deep-2)); padding: 14px 20px 15px; text-align: center; }
+  .rA .caps { font-size: 10px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: rgba(255,255,255,.55); }
+  .rA .statement { font-family: "Fraunces", serif; font-style: italic; font-weight: 400; font-size: 19px; letter-spacing: .01em; margin-top: 6px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+
+  /* B — plaque: icon above, statement, caps under */
+  .rB { background: linear-gradient(180deg, #0C3077, var(--navy)); text-align: center; padding: 20px 24px 18px; }
+  .rB .statement { font-family: "Fraunces", serif; font-weight: 300; font-style: italic; font-size: 25px; letter-spacing: .01em; }
+  .rB .statement .amp { color: var(--ice); font-style: normal; }
+  .rB .caps { font-size: 9.5px; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-top: 8px; }
+
+  /* C — hairline band: one line, divided */
+  .rC { background: var(--navy); border-top: 1px solid rgba(158,194,255,.35); padding: 17px 28px; display: flex; align-items: center; justify-content: center; gap: 18px; }
+  .rC .statement { font-family: "Fraunces", serif; font-style: italic; font-size: 19px; }
+  .rC .divider { width: 1px; height: 26px; background: rgba(158,194,255,.4); }
+  .rC .caps { font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.55); max-width: 380px; line-height: 1.5; text-align: left; }
+
+  /* D — quote: big serif quote mark, quiet */
+  .rD { background: linear-gradient(90deg, #08214f, var(--deep-2) 50%, #08214f); text-align: center; padding: 18px 24px 16px; position: relative; }
+  .rD .mark { font-family: "Fraunces", serif; font-size: 54px; line-height: 0; color: var(--ice); opacity: .9; display: block; height: 14px; }
+  .rD .statement { font-family: "Fraunces", serif; font-style: italic; font-weight: 400; font-size: 21px; margin-top: 10px; }
+  .rD .caps { font-size: 9.5px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-top: 7px; }
+
+  /* E — emblem: icon disc left, text stack, edge rule */
+  .rE { background: linear-gradient(90deg, var(--deep-2), var(--deep-1)); padding: 15px 26px; display: flex; align-items: center; gap: 16px; border-left: 4px solid var(--ice); }
+  .rE .disc { width: 44px; height: 44px; border-radius: 50%; background: rgba(158,194,255,.14); border: 1px solid rgba(158,194,255,.5); display: grid; place-items: center; flex: none; }
+  .rE .statement { font-family: "Fraunces", serif; font-style: italic; font-size: 20px; }
+  .rE .caps { font-size: 9.5px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.55); margin-top: 3px; }
+
+  /* F — pattern edge: faint repeated ribbon icons as texture */
+  .rF { background: var(--deep-2); padding: 16px 24px; text-align: center; position: relative; overflow: hidden; }
+  .rF .row { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-around; opacity: .07; pointer-events: none; }
+  .rF .statement { font-family: "Fraunces", serif; font-style: italic; font-size: 20px; position: relative; }
+  .rF .caps { font-size: 9.5px; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-top: 6px; position: relative; }
+</style>
+</head>
+<body>
+<h1>Blue ribbon — six directions</h1>
+<p class="sub">Each shown above the same fake page content, so you can judge it in context</p>
+
+<template id="ribbon-icon">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#9ec2ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:1em;height:1em">
+    <path d="M12 3v9"/><path d="M12 12c-3 0-5 2-6 4.5L12 21l6-4.5C17 14 15 12 12 12Z" fill="#9ec2ff" stroke="none"/><path d="M12 12c3 0 5 2 6 4.5"/><path d="M8.5 6.5 12 3l3.5 3.5"/>
+  </svg>
+</template>
+
+<div class="label">A · Statement (current, refined)</div>
+<div class="stage">
+  <div class="context"><div class="card"></div><div class="card"></div></div>
+  <div class="ribbon rA">
+    <div class="caps">Dedicated to targeted individuals worldwide facing homelessness and displacement</div>
+    <div class="statement"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#9ec2ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M12 3v9"/><path d="M12 12c-3 0-5 2-6 4.5L12 21l6-4.5C17 14 15 12 12 12Z" fill="#9ec2ff" stroke="none"/><path d="M12 12c3 0 5 2 6 4.5"/><path d="M8.5 6.5 12 3l3.5 3.5"/></svg>Everyone deserves a safe home.</div>
+  </div>
+</div>
+
+<div class="label">B · Plaque — icon above, larger serif line</div>
+<div class="stage">
+  <div class="context"><div class="card"></div><div class="card"></div></div>
+  <div class="ribbon rB">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#9ec2ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:26px;height:26px;margin-bottom:8px"><path d="M12 3v9"/><path d="M12 12c-3 0-5 2-6 4.5L12 21l6-4.5C17 14 15 12 12 12Z" fill="#9ec2ff" stroke="none"/><path d="M12 12c3 0 5 2 6 4.5"/><path d="M8.5 6.5 12 3l3.5 3.5"/></svg>
+    <div class="statement">Everyone deserves <span class="amp">a safe home</span>.</div>
+    <div class="caps">For targeted individuals worldwide facing homelessness and displacement</div>
+  </div>
+</div>
+
+<div class="label">C · Hairline band — one calm line, divided</div>
+<div class="stage">
+  <div class="context"><div class="card"></div><div class="card"></div></div>
+  <div class="ribbon rC">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#9ec2ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px"><path d="M12 3v9"/><path d="M12 12c-3 0-5 2-6 4.5L12 21l6-4.5C17 14 15 12 12 12Z" fill="#9ec2ff" stroke="none"/><path d="M12 12c3 0 5 2 6 4.5"/><path d="M8.5 6.5 12 3l3.5 3.5"/></svg>
+    <div class="statement">Everyone deserves a safe home.</div>
+    <div class="divider"></div>
+    <div class="caps">For targeted individuals worldwide facing homelessness and displacement</div>
+  </div>
+</div>
+
+<div class="label">D · Quote — quiet memorial tone</div>
+<div class="stage">
+  <div class="context"><div class="card"></div><div class="card"></div></div>
+  <div class="ribbon rD">
+    <span class="mark">&ldquo;</span>
+    <div class="statement">Everyone deserves a safe home.</div>
+    <div class="caps">Dedicated to targeted individuals worldwide facing homelessness and displacement</div>
+  </div>
+</div>
+
+<div class="label">E · Emblem — icon disc, left-anchored</div>
+<div class="stage">
+  <div class="context"><div class="card"></div><div class="card"></div></div>
+  <div class="ribbon rE">
+    <div class="disc"><svg viewBox="0 0 24 24" fill="none" stroke="#9ec2ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px"><path d="M12 3v9"/><path d="M12 12c-3 0-5 2-6 4.5L12 21l6-4.5C17 14 15 12 12 12Z" fill="#9ec2ff" stroke="none"/><path d="M12 12c3 0 5 2 6 4.5"/><path d="M8.5 6.5 12 3l3.5 3.5"/></svg></div>
+    <div>
+      <div class="statement">Everyone deserves a safe home.</div>
+      <div class="caps">Dedicated to targeted individuals worldwide facing homelessness and displacement</div>
+    </div>
+  </div>
+</div>
+
+<div class="label">F · Pattern — faint ribbon icons woven into the bar</div>
+<div class="stage">
+  <div class="context"><div class="card"></div><div class="card"></div></div>
+  <div class="ribbon rF">
+    <div class="row"></div>
+    <div class="statement">Everyone deserves a safe home.</div>
+    <div class="caps">Dedicated to targeted individuals worldwide facing homelessness and displacement</div>
+  </div>
+</div>
+
+<script>
+  // fill the pattern row with faint ribbon icons
+  const row = document.querySelector('.rF .row');
+  for (let i = 0; i < 26; i++) {
+    const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('fill', 'none');
+    s.setAttribute('stroke', '#9ec2ff'); s.setAttribute('stroke-width', '2.2');
+    s.setAttribute('stroke-linecap', 'round'); s.setAttribute('stroke-linejoin', 'round');
+    s.setAttribute('style', 'width:34px;height:34px');
+    s.innerHTML = '<path d="M12 3v9"/><path d="M12 12c-3 0-5 2-6 4.5L12 21l6-4.5C17 14 15 12 12 12Z" fill="#9ec2ff" stroke="none"/><path d="M12 12c3 0 5 2 6 4.5"/><path d="M8.5 6.5 12 3l3.5 3.5"/>';
+    row.appendChild(s);
+  }
+</script>
+</body>
+</html>

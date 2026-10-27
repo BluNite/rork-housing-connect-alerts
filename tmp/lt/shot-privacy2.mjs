@@ -1,0 +1,10 @@
+import { chromium } from "/usr/local/lib/node_modules/playwright/index.mjs";
+const base = "https://99wcbe1quzcp38wqka8k4-web-lottery-tracker.rork.live";
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+await page.goto(base + "/privacy", { waitUntil: "networkidle" });
+await page.waitForTimeout(1500);
+await page.screenshot({ path: ".rork/web-verification/blue-privacy.png" });
+await page.screenshot({ path: ".rork/web-verification/blue-privacy-bottom.png", fullPage: true });
+console.log("ok");
+await browser.close();

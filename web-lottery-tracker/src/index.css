@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* #F8FAFD canvas, #FFFFFF surface, #14243A ink, #1E6FE8 blue, #F07C1F orange */
+    --background: 210 33% 98%;
+    --foreground: 215 49% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 49% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 49% 15%;
+    --primary: 216 82% 51%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 214 32% 94%;
+    --secondary-foreground: 215 49% 15%;
+    --muted: 214 32% 94%;
+    --muted-foreground: 215 15% 40%;
+    --accent: 213 100% 95%;
+    --accent-foreground: 216 82% 38%;
+    --warn: 27 87% 53%;
+    --warn-soft: 31 92% 93%;
+    --warn-ink: 28 81% 30%;
+    --destructive: 4 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 216 33% 92%;
+    --input: 216 33% 88%;
+    --ring: 216 82% 51%;
+    --radius: 0.75rem;
+
+    --sidebar-background: 216 82% 45%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 216 82% 45%;
+    --sidebar-accent: 216 60% 62%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 216 50% 65%;
+    --sidebar-ring: 0 0% 100%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+    font-feature-settings: "tnum" 0;
+    /* Bright blue-orange wash behind everything (user-requested palette) */
+    background-image: linear-gradient(175deg, #eef5ff 0%, #f8fafd 42%, #edf3fb 100%);
+    background-attachment: fixed;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply rounded-2xl border bg-card shadow-[0_1px_2px_rgba(22,35,29,0.04)];
+  }
+  .font-display {
+    font-family: "Fraunces", Georgia, serif;
+    font-optical-sizing: auto;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: rise 0.35s ease-out both;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 26s linear infinite;
+}
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.floaty {
+  animation: floaty 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .floaty,
+  .rise {
+    animation: none;
+  }
+}
+
+.leaflet-container {
+  font-family: inherit;
+  background: #e8eff9;
+}
+
+/* Keep the basemap quiet so the blue and orange pins stand out */
+.leaflet-tile {
+  filter: saturate(0.55) brightness(1.03);
+}
+
+/* Blue-orange gradient system — every ramp stays inside the brand palette */
+.grad-primary {
+  background-image: linear-gradient(135deg, #3b8bff 0%, #1e6fe8 60%, #1554b4 100%);
+}
+.grad-orange {
+  background-image: linear-gradient(135deg, #ff9a3d 0%, #f07c1f 100%);
+}
+.grad-deep {
+  background-image: linear-gradient(168deg, #2a79f0 0%, #1e6fe8 45%, #12336e 100%);
+}
+.text-grad {
+  background-image: linear-gradient(115deg, #1e6fe8 15%, #3b8bff 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

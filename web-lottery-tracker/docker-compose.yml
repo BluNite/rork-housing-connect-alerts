@@ -1,0 +1,28 @@
+# Hardened local/self-host deployment. The container is read-only, runs as
+# UID 101, has all Linux capabilities dropped, and cannot gain new privileges.
+services:
+  web:
+    build:
+      context: .
+      # Public client values only (see Dockerfile). Server secrets are
+      # Supabase edge-function env vars — they live there, never here.
+      args:
+        EXPO_PUBLIC_SUPABASE_URL: ${EXPO_PUBLIC_SUPABASE_URL}
+        EXPO_PUBLIC_SUPABASE_ANON_KEY: ${EXPO_PUBLIC_SUPABASE_ANON_KEY}
+    image: lottery-tracker-web
+    ports:
+      - "8080:8080"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /var/cache/nginx:size=16m,mode=0700,uid=101,gid=101
+      - /var/run:size=1m,mode=0700,uid=101,gid=101
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/healthz"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped

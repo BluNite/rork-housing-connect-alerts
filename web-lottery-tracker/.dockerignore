@@ -1,0 +1,21 @@
+# Secrets never enter the build context
+.env
+.env.*
+*.local
+
+# Not needed in the image
+node_modules
+dist
+.git
+.gitignore
+tmp
+coverage
+*.md
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Platform folders not part of the web build
+ios
+android
+.expo

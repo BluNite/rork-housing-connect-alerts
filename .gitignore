@@ -1,0 +1,12 @@
+node_modules
+.expo
+
+# secrets — never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Rork project state
+.rork

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ComponentType } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AlertCircle, ArrowRight, Bookmark, Building2, CalendarDays, CalendarPlus, CheckCircle2, Clock, FileText, Plus, BellRing } from "lucide-react";
+import { AlertCircle, ArrowRight, Bookmark, Building2, CalendarDays, CalendarPlus, CheckCircle2, Clock, FileText, Plus, BellRing, Sparkles } from "lucide-react";
 import { AppShell, PageTitle } from "@/components/AppShell";
 import { TaskRow } from "@/components/TaskRow";
 import { AddReminderDialog } from "@/components/AddReminderDialog";
@@ -127,6 +127,24 @@ export default function Alerts() {
     <AppShell header={<PageTitle title={`${greeting()}, ${user?.name.split(" ")[0]}`} subtitle="Here's what's happening with your saved lotteries." />}>
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_370px]">
         <div className="space-y-5">
+          {user?.plan !== "pro" && (
+            <section
+              aria-label="Upgrade to Pro"
+              className="grad-orange flex flex-wrap items-center justify-between gap-3 rounded-2xl px-5 py-4 text-white shadow-sm"
+            >
+              <div className="flex items-center gap-3">
+                <Sparkles className="h-5 w-5 shrink-0" aria-hidden />
+                <div>
+                  <p className="font-bold leading-snug">Go ad-free with Pro</p>
+                  <p className="text-[13px] leading-snug opacity-90">$4/mo or $24/yr — every feature, zero ads, cancel anytime.</p>
+                </div>
+              </div>
+              <Button onClick={() => navigate("/upgrade")} className="h-10 gap-1.5 bg-white font-bold text-warn-ink shadow-sm hover:bg-white/90">
+                Upgrade <ArrowRight className="h-4 w-4" aria-hidden />
+              </Button>
+            </section>
+          )}
+
           <div className="grid gap-4 sm:grid-cols-3">
             <Stat icon={CalendarDays} value={weekCount} label={weekCount === 1 ? "deadline this week" : "deadlines this week"} />
             <Stat icon={Bookmark} value={savedList.length} label={savedList.length === 1 ? "saved lottery" : "saved lotteries"} />

@@ -132,6 +132,7 @@ function UserMenu() {
   const { user, signOut } = useStore();
   const navigate = useNavigate();
   if (!user) return null;
+  const isPro = user.plan === "pro";
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center gap-3 rounded-full py-1 pl-1 pr-3 transition-colors hover:bg-accent/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
@@ -147,6 +148,11 @@ function UserMenu() {
           <div className="truncate text-xs text-muted-foreground">{user.email}</div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {!isPro && (
+          <DropdownMenuItem onClick={() => navigate("/upgrade")} className="font-semibold text-warn-ink focus:text-warn-ink">
+            <Sparkles className="mr-2 h-4 w-4" /> Go Pro — ad-free
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={() => navigate("/account")}>
           <UserIcon className="mr-2 h-4 w-4" /> Account
         </DropdownMenuItem>

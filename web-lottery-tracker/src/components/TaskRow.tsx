@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { buzz } from "@/lib/devicePrefs";
 import { toast } from "sonner";
 
 export function DueBadge({ iso, done }: { iso: string; done?: boolean }) {
@@ -36,6 +37,7 @@ export function TaskRow({ task }: { task: Task }) {
   const snoozed = task.snoozedUntil && task.snoozedUntil === due;
 
   const onToggle = () => {
+    buzz(task.done ? 8 : 12);
     toggleTask(task.id);
     if (!task.done) toast.success("Nice, marked done", { description: task.title, action: { label: "Undo", onClick: () => toggleTask(task.id) } });
   };

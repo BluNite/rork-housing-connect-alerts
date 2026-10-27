@@ -183,6 +183,13 @@ export function AppShell({ children, header }: { children: ReactNode; header?: R
   useDueNotifications();
   return (
     <div className="min-h-screen bg-background">
+      {/* Keyboard users can jump straight past the navigation */}
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2.5 focus:text-sm focus:font-semibold focus:text-primary focus:shadow-lg focus:outline focus:outline-2 focus:outline-primary"
+      >
+        Skip to main content
+      </a>
       <aside className="grad-deep fixed inset-y-0 left-0 hidden w-[260px] lg:block">
         <SidebarContent />
       </aside>
@@ -207,7 +214,9 @@ export function AppShell({ children, header }: { children: ReactNode; header?: R
             </div>
             <UserMenu />
           </div>
-          <main className="mt-7">{children}</main>
+          <main id="main" tabIndex={-1} className="mt-7 focus:outline-none">
+            {children}
+          </main>
         </div>
       </div>
       <DedicationRibbon />

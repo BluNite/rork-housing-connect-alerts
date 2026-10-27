@@ -188,7 +188,7 @@ export default function Landing() {
         </a>
       </section>
 
-      <main className="mx-auto w-full max-w-6xl px-5 sm:px-8">
+      <main id="main" className="mx-auto w-full max-w-6xl px-5 sm:px-8">
         {/* Why */}
         <Reveal className="pt-20 sm:pt-28">
           <h2 className="font-display mx-auto max-w-3xl text-center text-[30px] font-semibold leading-tight tracking-tight sm:text-[40px]">

@@ -3,6 +3,7 @@ import { useStore } from "@/lib/store";
 import type { Lottery } from "@/lib/lotteries";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { buzz } from "@/lib/devicePrefs";
 import { toast } from "sonner";
 
 export function SaveButton({ lottery, size = "default", className }: { lottery: Lottery; size?: "default" | "lg"; className?: string }) {
@@ -13,6 +14,7 @@ export function SaveButton({ lottery, size = "default", className }: { lottery: 
   const toggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    buzz(saved ? [8, 40, 8] : 15);
     if (saved) {
       unsaveLottery(lottery.id);
       toast("Alert removed", { description: lottery.name, action: { label: "Undo", onClick: () => saveLottery(lottery) } });

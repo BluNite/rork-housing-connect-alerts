@@ -1,10 +1,13 @@
+import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import "leaflet/dist/leaflet.css";
 
+import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { StoreProvider, useStore } from "@/lib/store";
+import { useDevicePrefs, buzz } from "@/lib/devicePrefs";
 import { BrandMark } from "@/components/BrandMark";
 import { CookieBanner } from "@/components/CookieBanner";
 
@@ -20,6 +23,43 @@ import { Privacy } from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
+/**
+ * Inactivity guard: after the user's chosen idle time (Account → Accessibility
+ * & session; default 15 minutes) with no clicks, keys, scroll, or mouse
+ * movement, sign the user out and return to the landing page (user request —
+ * protects accounts on shared computers). Signing in again is one tap.
+ */
+function IdleSignOut() {
+  const { user, signOut } = useStore();
+  const navigate = useNavigate();
+  const { idleTimeoutMinutes: minutes } = useDevicePrefs();
+  useEffect(() => {
+    if (!user || minutes === 0) return;
+    const IDLE_LIMIT_MS = minutes * 60_000;
+    const span = minutes >= 60 ? "1 hour" : `${minutes} minutes`;
+    let timer = 0;
+    const reset = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        buzz(30);
+        signOut();
+        toast.info(`Signed out after ${span} of inactivity`, {
+          description: "For your privacy. Sign back in any time — your checklist is waiting.",
+        });
+        navigate("/");
+      }, IDLE_LIMIT_MS);
+    };
+    const events = ["pointerdown", "keydown", "scroll", "mousemove"] as const;
+    events.forEach((e) => window.addEventListener(e, reset, { passive: true }));
+    reset();
+    return () => {
+      window.clearTimeout(timer);
+      events.forEach((e) => window.removeEventListener(e, reset));
+    };
+  }, [user, minutes, signOut, navigate]);
+  return null;
+}
 
 function Gate() {
   const { user, ready, loading } = useStore();
@@ -42,15 +82,18 @@ function Gate() {
       </Routes>
     );
   return (
-    <Routes>
-      <Route path="/" element={<Alerts />} />
-      <Route path="/browse" element={<Browse />} />
-      <Route path="/lottery/:id" element={<LotteryDetail />} />
-      <Route path="/calendar" element={<CalendarPage />} />
-      <Route path="/account" element={<Account />} />
-      <Route path="/upgrade" element={<Upgrade />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <>
+      <IdleSignOut />
+      <Routes>
+        <Route path="/" element={<Alerts />} />
+        <Route path="/browse" element={<Browse />} />
+        <Route path="/lottery/:id" element={<LotteryDetail />} />
+        <Route path="/calendar" element={<CalendarPage />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/upgrade" element={<Upgrade />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }
 

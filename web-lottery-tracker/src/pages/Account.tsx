@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { CalendarPlus, CreditCard, Download, Lock, LogOut, ShieldCheck, Sparkles, Trash2 } from "lucide-react";
+import { CalendarPlus, CreditCard, Download, Lock, LogOut, ShieldCheck, Sparkles, Timer, Trash2, Vibrate } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { AppShell, PageTitle } from "@/components/AppShell";
 import { useStore, STATUS_LABEL } from "@/lib/store";
+import { useDevicePrefs, setIdleTimeoutMinutes, setHaptics, buzz, IDLE_OPTIONS } from "@/lib/devicePrefs";
 import { fmtDate } from "@/lib/dates";
 import { downloadIcs } from "@/lib/reminders";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,9 +23,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 export default function Account() {
-  const { user, updateProfile, signOut, saved, tasks, prefs, unsaveLottery, clearData, refresh } = useStore();
+  const { user, updateProfile, signOut, saved, tasks, prefs: syncPrefs, unsaveLottery, clearData, refresh } = useStore();
+  const prefs = useDevicePrefs();
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const [name, setName] = useState(user?.name ?? "");
@@ -45,7 +49,7 @@ export default function Account() {
     const payload = {
       exportedAt: new Date().toISOString(),
       account: { email: user?.email, name: user?.name, plan: user?.plan },
-      preferences: prefs,
+      preferences: { synced: syncPrefs, device: prefs },
       savedLotteries: savedList,
       tasks,
     };
@@ -276,6 +280,67 @@ export default function Account() {
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
+            </div>
+          </section>
+
+          <section className="panel space-y-4 p-5">
+            <h2 className="text-lg font-bold">Accessibility & session</h2>
+
+            <div>
+              <div className="flex items-center gap-2 font-medium">
+                <Timer className="h-4 w-4 text-primary" aria-hidden /> Auto sign-out when idle
+              </div>
+              <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">
+                After this much screen time with no activity, we sign you out and return to the landing page — privacy for
+                shared computers. Your alerts stay saved.
+              </p>
+              <div role="group" aria-label="Idle time before automatic sign-out" className="mt-3 flex flex-wrap gap-2">
+                {IDLE_OPTIONS.map((m) => {
+                  const active = prefs.idleTimeoutMinutes === m;
+                  return (
+                    <button
+                      key={m}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => {
+                        setIdleTimeoutMinutes(m);
+                        buzz(active ? 0 : 10);
+                        toast(
+                          m === 0 ? "Auto sign-off turned off" : m >= 60 ? "Auto sign-off after 1 hour" : `Auto sign-off after ${m} minutes`,
+                        );
+                      }}
+                      className={cn(
+                        "min-w-11 rounded-lg border px-3 py-2 text-[13px] font-semibold tabular transition-colors",
+                        active
+                          ? "border-primary/40 bg-accent text-primary"
+                          : "border-border text-muted-foreground hover:bg-accent/60 hover:text-foreground",
+                      )}
+                    >
+                      {m === 0 ? "Off" : m >= 60 ? "1 hr" : `${m} min`}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="flex items-start justify-between gap-4 border-t pt-4">
+              <div>
+                <Label htmlFor="haptics-toggle" className="flex items-center gap-2 font-medium">
+                  <Vibrate className="h-4 w-4 text-primary" aria-hidden /> Vibration feedback
+                </Label>
+                <p className="mt-1 max-w-[240px] text-[13px] leading-relaxed text-muted-foreground">
+                  A short buzz when you save an alert or finish a task. On supported Android browsers.
+                </p>
+              </div>
+              <Switch
+                id="haptics-toggle"
+                checked={prefs.haptics}
+                onCheckedChange={(v) => {
+                  setHaptics(v);
+                  if (v) buzz(15);
+                }}
+                aria-label="Vibration feedback"
+              />
             </div>
           </section>
 

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import "leaflet/dist/leaflet.css";
 
 import { toast } from "sonner";
@@ -23,6 +23,32 @@ import { Privacy } from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
+/**
+ * Branded transition screen shown while auth state settles (initial load,
+ * sign-in, profile fetch). Blocks the momentary flash of the wrong page.
+ */
+function LaunchScreen() {
+  return (
+    <div className="grad-deep grid min-h-screen place-items-center" role="status" aria-live="polite">
+      <div className="flex flex-col items-center gap-6 px-6 text-center">
+        <div className="relative grid h-20 w-20 place-items-center">
+          <span className="absolute inset-0 rounded-full border-[3px] border-white/15" aria-hidden />
+          <span
+            className="absolute inset-0 animate-spin rounded-full border-[3px] border-transparent border-t-white/90 motion-reduce:animate-none"
+            style={{ animationDuration: "1.1s" }}
+            aria-hidden
+          />
+          <BrandMark className="h-9 w-9" />
+        </div>
+        <div>
+          <p className="font-display text-lg font-semibold text-white">Preparing your alerts…</p>
+          <p className="mt-1 text-sm text-white/60">One moment — we're syncing your lotteries.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /**
  * Inactivity guard: after the user's chosen idle time (Account → Accessibility
@@ -62,16 +88,9 @@ function IdleSignOut() {
 }
 
 function Gate() {
-  const { user, ready, loading } = useStore();
-  if (!ready || loading) {
-    return (
-      <div className="grid min-h-screen place-items-center bg-background">
-        <div className="flex flex-col items-center gap-4">
-          <BrandMark className="h-12 w-12 animate-pulse" />
-          <p className="text-sm text-muted-foreground">Loading your alerts…</p>
-        </div>
-      </div>
-    );
+  const { user, ready, loading, authPending } = useStore();
+  if (!ready || loading || authPending) {
+    return <LaunchScreen />;
   }
   if (!user)
     return (
@@ -86,6 +105,8 @@ function Gate() {
       <IdleSignOut />
       <Routes>
         <Route path="/" element={<Alerts />} />
+        {/* Signed-in users never belong on the auth screen — land them at home instead of the 404 catch-all. */}
+        <Route path="/login" element={<Navigate to="/" replace />} />
         <Route path="/browse" element={<Browse />} />
         <Route path="/lottery/:id" element={<LotteryDetail />} />
         <Route path="/calendar" element={<CalendarPage />} />

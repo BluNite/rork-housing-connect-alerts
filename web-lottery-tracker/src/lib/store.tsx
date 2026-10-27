@@ -185,6 +185,8 @@ interface Store {
   user: User | null;
   ready: boolean;
   loading: boolean;
+  /** A session exists but its profile hasn't finished loading — show the transition screen, not logged-out routes. */
+  authPending: boolean;
   refresh: () => void;
   signOut: () => void;
   updateProfile: (name: string) => void;
@@ -340,6 +342,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       user,
       ready,
       loading,
+      authPending: !!userId && !user,
       refresh,
       signOut,
       updateProfile,

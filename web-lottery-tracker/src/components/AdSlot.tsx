@@ -69,9 +69,8 @@ declare global {
  * renders inside this reserved-height box; otherwise the first-party house ad
  * (our own upgrade pitch — no tracking, safe under any consent choice).
  *
- * Placement rules live in .rork/ads-standard.md — the Alerts right rail, the
- * end of the Browse list, and the landing-page sponsor section are the only
- * allowed placements. The Landing page has its own SponsorSlot (same rules).
+ * Placement rules live in .rork/ads-standard.md — the Alerts right rail and
+ * the end of the Browse list are the only allowed placements.
  */
 export function AdSlot({ className }: { className?: string }) {
   const { user } = useStore();

@@ -190,6 +190,29 @@ export default function Browse() {
               {!isLoading && <span className="ml-2 text-sm font-normal text-muted-foreground">{openCount} accepting applications</span>}
             </h2>
             <div className="flex items-center gap-3">
+              {/* Quick district filter — same state as the Borough checkboxes above. */}
+              <Select
+                value={boroughs.length === 1 ? boroughs[0] : "all"}
+                onValueChange={(v) => setBoroughs(v === "all" ? [] : [v as Borough])}
+              >
+                <SelectTrigger className="h-10 w-[168px] bg-card" aria-label="Filter by district">
+                  <SelectValue>
+                    {boroughs.length === 0
+                      ? "All districts"
+                      : boroughs.length === 1
+                        ? boroughs[0]
+                        : `${boroughs.length} districts`}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All districts</SelectItem>
+                  {BOROUGHS.map((b) => (
+                    <SelectItem key={b} value={b}>
+                      {b}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <div className="inline-flex rounded-lg border bg-card p-1" role="group" aria-label="View">
                 {(["map", "list"] as const).map((v) => (
                   <button

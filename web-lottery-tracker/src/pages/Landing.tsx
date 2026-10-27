@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { BellRing, CalendarCheck, ChevronDown, ListChecks, Map, Megaphone, ShieldCheck } from "lucide-react";
+import { BellRing, CalendarCheck, ChevronDown, ListChecks, Map, ShieldCheck, Sparkles, X } from "lucide-react";
 import { BrandMark } from "@/components/BrandMark";
 import { DedicationRibbon } from "./Privacy";
 import { Reveal } from "@/components/Reveal";
@@ -34,6 +34,68 @@ const STEPS = [
   { n: "3", title: "We nudge you before they close", body: "Deadlines land on your calendar and in your browser — no more finding out it closed last week." },
 ];
 
+/**
+ * First-party Pro pitch as a flash card: slides in after a few seconds, once
+ * per device (reappears after a week). Dismissal is remembered locally.
+ */
+function ProFlashCard() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    let seen = 0;
+    try {
+      seen = Number(localStorage.getItem("ltn:pro-flash") ?? 0);
+    } catch {
+      /* private mode — just show it */
+    }
+    if (Date.now() - seen < 7 * 86_400_000) return;
+    const id = window.setTimeout(() => setShow(true), 6_000);
+    return () => window.clearTimeout(id);
+  }, []);
+  const dismiss = () => {
+    setShow(false);
+    try {
+      localStorage.setItem("ltn:pro-flash", String(Date.now()));
+    } catch {
+      /* ignore */
+    }
+  };
+  if (!show) return null;
+  return (
+    <div
+      aria-label="Pro membership offer"
+      className="fixed bottom-4 right-4 z-50 w-[calc(100vw-2rem)] max-w-sm sm:bottom-6 sm:right-6"
+      style={{ animation: "rise 0.45s cubic-bezier(0.22,1,0.36,1) both", animationDelay: "0s" }}
+    >
+      <div className="panel relative border border-warn/30 p-5 shadow-xl">
+        <button
+          onClick={dismiss}
+          aria-label="Dismiss Pro offer"
+          className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-accent hover:text-foreground"
+        >
+          <X className="h-4 w-4" />
+        </button>
+        <span className="grad-orange inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white">
+          <Sparkles className="h-3 w-3" aria-hidden /> Pro
+        </span>
+        <p className="font-display mt-3 text-lg font-semibold leading-snug">Never watch an ad on your housing hunt.</p>
+        <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">
+          Go ad-free for $4/mo or $24/yr — every feature stays, the clutter goes. Cancel anytime.
+        </p>
+        <div className="mt-4 flex items-center gap-3">
+          <Link
+            to="/login"
+            onClick={dismiss}
+            className="grad-orange inline-flex h-10 items-center rounded-xl px-4 text-sm font-bold text-white shadow-sm transition hover:-translate-y-px hover:shadow"
+          >
+            See Pro <span aria-hidden>→</span>
+          </Link>
+          <span className="text-xs text-muted-foreground">The free plan stays free.</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Scroll-progress hairline in the brand gradient, fixed to the top edge. */
 function ScrollProgress() {
   const [p, setP] = useState(0);
@@ -55,42 +117,6 @@ function ScrollProgress() {
   }, []);
   return (
     <div className="fixed inset-x-0 top-0 z-50 h-1 origin-left bg-gradient-to-r from-[#1e6fe8] via-[#f07c1f] to-[#1e6fe8]" style={{ transform: `scaleX(${p})` }} aria-hidden />
-  );
-}
-
-/**
- * House sponsorship slot for the landing page — this is the "paid commercial"
- * space that keeps the service free. First-party content today (no tracking,
- * safe under any consent choice); a partner unit renders in this same
- * reserved-height box later, gated by cookie consent. Labeled and
- * reserved-height per .rork/ads-standard.md.
- */
-function SponsorSlot() {
-  return (
-    <section aria-label="Advertisement" data-ad-slot className="min-h-[150px]">
-      <div className="rounded-2xl border border-dashed border-warn/40 bg-gradient-to-br from-warn-soft/70 via-card to-accent/60 p-6 sm:p-7">
-        <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-          <span className="grad-orange grid h-11 w-11 shrink-0 place-items-center rounded-full text-white shadow-sm">
-            <Megaphone className="h-5 w-5" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-warn-ink">Advertisement</p>
-            <p className="mt-1 text-[15px] font-semibold leading-snug text-foreground">
-              Your business here — reach New Yorkers finding their next home.
-            </p>
-            <p className="mt-1 text-sm leading-snug text-muted-foreground">
-              Sponsorship keeps Lottery Tracker free for everyone. Local and mission-aligned businesses only.
-            </p>
-          </div>
-          <a
-            href="mailto:sponsors@blunite.app?subject=Lottery%20Tracker%20sponsorship"
-            className="grad-primary inline-flex h-11 shrink-0 items-center rounded-xl px-5 text-[15px] font-semibold text-white shadow-sm transition hover:-translate-y-px hover:shadow"
-          >
-            Become a sponsor
-          </a>
-        </div>
-      </div>
-    </section>
   );
 }
 
@@ -131,6 +157,13 @@ export default function Landing() {
             <a href="#how" className="hidden rounded-lg px-3 py-2 text-sm font-medium text-white/80 transition hover:bg-white/10 hover:text-white sm:block">
               How it works
             </a>
+            <Link
+              to="/login"
+              aria-label="Go Pro — upgrade to the ad-free plan"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-warn px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:-translate-y-px hover:shadow"
+            >
+              <Sparkles className="h-4 w-4" aria-hidden /> Go Pro
+            </Link>
             <Link
               to="/login"
               className="rounded-xl bg-white px-4 py-2 text-sm font-bold text-[#1e6fe8] shadow-sm transition hover:-translate-y-px hover:shadow"
@@ -240,22 +273,6 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* Sponsorship — the paid unit that keeps the service free */}
-        <section className="pt-20 sm:pt-28">
-          <Reveal>
-            <h2 className="font-display text-center text-[26px] font-semibold leading-tight tracking-tight sm:text-[34px]">
-              Free for everyone, <em className="font-light italic">sponsored by neighbors.</em>
-            </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-center text-muted-foreground">
-              Lottery Tracker is a public service: every feature stays free because local businesses sponsor this
-              space. One sponsor per screen, clearly labeled, never inside your checklist.
-            </p>
-          </Reveal>
-          <Reveal className="mt-8" delay={120}>
-            <SponsorSlot />
-          </Reveal>
-        </section>
-
         {/* Closing CTA */}
         <Reveal className="pb-24 pt-20 sm:pb-32 sm:pt-28">
           <div className="grad-deep relative overflow-hidden rounded-3xl px-6 py-14 text-center text-white sm:px-12">
@@ -294,6 +311,7 @@ export default function Landing() {
         </div>
       </footer>
 
+      <ProFlashCard />
       <DedicationRibbon />
     </div>
   );

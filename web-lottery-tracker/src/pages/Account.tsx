@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { openStripe } from "@/lib/openStripe";
 
 export default function Account() {
   const { user, updateProfile, signOut, saved, tasks, prefs: syncPrefs, unsaveLottery, clearData, refresh } = useStore();
@@ -88,7 +89,7 @@ export default function Account() {
       const { data, error } = await supabase.functions.invoke("stripe-checkout", { body: { mode: "portal" } });
       if (error) throw new Error(error.message);
       if (!data?.url) throw new Error("Portal didn't open. Try again in a moment.");
-      window.location.assign(data.url as string);
+      if (!openStripe(data.url as string)) setBusy(false);
     } catch (err) {
       toast.error("Couldn't open billing", { description: err instanceof Error ? err.message : "Please try again." });
       setBusy(false);

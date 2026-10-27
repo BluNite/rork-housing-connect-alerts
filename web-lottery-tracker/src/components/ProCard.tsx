@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { openStripe } from "@/lib/openStripe";
 
 const PERKS = ["No ads, anywhere", "Same features, zero clutter", "Cancel anytime"];
 
@@ -23,7 +24,7 @@ export function ProCard({ className }: { className?: string }) {
       const { data, error } = await supabase.functions.invoke("stripe-checkout", { body: { mode: "checkout", plan } });
       if (error) throw new Error(error.message);
       if (!data?.url) throw new Error("Checkout didn't open. Try again in a moment.");
-      window.location.assign(data.url as string);
+      if (!openStripe(data.url as string)) setBusy(null);
     } catch (err) {
       toast.error("Couldn't start checkout", { description: err instanceof Error ? err.message : "Please try again." });
       setBusy(null);

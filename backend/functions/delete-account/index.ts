@@ -1,4 +1,5 @@
 import { AuthError, createAdminClient, requireAuth } from "../_shared/auth.ts";
+import { overLimit, tooMany } from "../_shared/rateLimit.ts";
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
@@ -28,6 +29,9 @@ Deno.serve(async (req) => {
   } catch (e) {
     return json({ error: e instanceof AuthError ? e.message : "Unauthorized" }, 401);
   }
+  // Brake: at most 5 schedule/cancel calls per user per 10 minutes — this
+  // endpoint also triggers the purge sweep, so it must not be spammable.
+  if (overLimit(`delete-account:${userId}`, 5, 600_000)) return tooMany();
 
   const admin = createAdminClient();
   let body: { cancel?: boolean } = {};

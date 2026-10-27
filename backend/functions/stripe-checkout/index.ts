@@ -1,5 +1,6 @@
 import Stripe from "npm:stripe@16.12.0";
 import { requireAuth, createAdminClient, AuthError } from "../_shared/auth.ts";
+import { overLimit, tooMany } from "../_shared/rateLimit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -25,6 +26,8 @@ Deno.serve(async (req) => {
 
   try {
     const user = await requireAuth(req);
+    // Brake: at most 5 checkout/portal sessions per user per minute.
+    if (overLimit(`checkout:${user.userId}`, 5, 60_000)) return tooMany();
     const secret = Deno.env.get("STRIPE_SECRET_KEY");
     if (!secret) throw new Error("Billing is not configured yet");
     const stripe = new Stripe(secret);

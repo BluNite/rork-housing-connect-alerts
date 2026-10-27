@@ -24,8 +24,12 @@ const friendly = (msg: string) => {
   if (/invalid login credentials/i.test(msg)) return "That email and password don't match. Try again or use a sign-in link.";
   if (/already registered/i.test(msg)) return "An account with this email already exists. Sign in instead.";
   if (/rate limit/i.test(msg)) return "Too many emails sent. Wait a few minutes and try again.";
+  if (/email not confirmed/i.test(msg)) return "Please confirm your email first. Check your inbox and spam folder for the confirmation link.";
   return msg;
 };
+
+/** Everyday user mistakes the form already explains, so they aren't logged as app errors. */
+const EXPECTED_AUTH = /invalid login credentials|already registered|rate limit|email not confirmed/i;
 
 export default function Login() {
   const [mode, setMode] = useState<Mode>("signin");
@@ -89,7 +93,7 @@ export default function Login() {
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong";
-      console.error("[auth]", err);
+      if (!EXPECTED_AUTH.test(msg)) console.error("[auth]", err);
       recordFailure(addr);
       setError(isLocked(addr) ? cooldownMessage(addr) : friendly(msg));
     } finally {

@@ -9,6 +9,7 @@ import { daysUntil, fmtDate, fmtTime } from "@/lib/dates";
 import { downloadIcs, notificationsSupported } from "@/lib/reminders";
 import { Button } from "@/components/ui/button";
 import { AdSlot } from "@/components/AdSlot";
+import { ProCard } from "@/components/ProCard";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
@@ -193,6 +194,7 @@ export default function Alerts() {
         </div>
 
         <aside className="space-y-5">
+          <ProCard />
           <section className="panel p-5">
             <div className="flex items-center justify-between border-b pb-4">
               <h2 className="text-lg font-bold">Next deadline</h2>

@@ -4,9 +4,13 @@
  * server-side limits — it stops casual hammering and shows a clear cooldown,
  * but real enforcement lives with the auth server.
  *
- * Stored under "ltn:auth-fails" (localStorage): email → failure timestamps.
- * Clamped: emails truncated to 120 chars, at most 50 tracked emails,
- * timestamps older than the window pruned on every touch.
+ * Stored under "ltn:auth-fails" (localStorage): a one-way fingerprint of the
+ * email (FNV-1a) → failure timestamps. The email itself is never written to
+ * storage — a fingerprint can't be reversed into an address, so a snooped
+ * browser reveals no personal data. (Encrypting localStorage was considered
+ * and rejected: the decryption key would live in the same storage, protecting
+ * nothing.) Clamped: at most 50 tracked fingerprints, timestamps older than
+ * the window pruned on every touch.
  */
 
 const KEY = "ltn:auth-fails";
@@ -19,6 +23,16 @@ type Failures = Record<string, number[]>;
 
 const normalize = (addr: string) => addr.trim().toLowerCase().slice(0, MAX_ADDR_LEN);
 
+/** One-way fingerprint (FNV-1a, hex) — enough to correlate attempts without storing the address. */
+const fingerprint = (addr: string) => {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < addr.length; i++) {
+    h ^= addr.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h.toString(16);
+};
+
 function read(): Failures {
   try {
     const raw = localStorage.getItem(KEY);
@@ -30,7 +44,7 @@ function read(): Failures {
     for (const [k, list] of Object.entries(parsed)) {
       if (!Array.isArray(list)) continue;
       const fresh = list.filter((t) => typeof t === "number" && t > cutoff);
-      if (fresh.length) out[k.slice(0, MAX_ADDR_LEN)] = fresh.slice(-MAX_ATTEMPTS);
+      if (fresh.length) out[k] = fresh.slice(-MAX_ATTEMPTS);
     }
     return out;
   } catch {
@@ -55,19 +69,19 @@ export function isLocked(addr: string): boolean {
 
 export function failCount(addr: string): number {
   const map = read();
-  return (map[normalize(addr)] ?? []).length;
+  return (map[fingerprint(normalize(addr))] ?? []).length;
 }
 
 /** Milliseconds until the lock lifts (0 when unlocked). */
 export function msLeft(addr: string): number {
   const map = read();
-  const list = map[normalize(addr)] ?? [];
+  const list = map[fingerprint(normalize(addr))] ?? [];
   if (list.length < MAX_ATTEMPTS) return 0;
   return Math.max(0, list[0] + WINDOW_MS - Date.now());
 }
 
 export function recordFailure(addr: string) {
-  const key = normalize(addr);
+  const key = fingerprint(normalize(addr));
   const map = read();
   const cutoff = Date.now() - WINDOW_MS;
   const list = (map[key] ?? []).filter((t) => t > cutoff);
@@ -78,7 +92,7 @@ export function recordFailure(addr: string) {
 
 export function clearFailures(addr: string) {
   const map = read();
-  delete map[normalize(addr)];
+  delete map[fingerprint(normalize(addr))];
   write(map);
 }
 

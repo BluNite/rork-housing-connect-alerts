@@ -28,6 +28,7 @@ FROM nginxinc/nginx-unprivileged:1.27-alpine
 USER 101
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY --from=build --chown=101:101 /app/dist /usr/share/nginx/html
 
 # Strictly static: no env vars are read at runtime, no secrets are baked in.

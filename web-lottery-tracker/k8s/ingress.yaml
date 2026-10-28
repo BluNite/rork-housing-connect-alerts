@@ -1,0 +1,33 @@
+# Public HTTPS entry point. Assumes the ingress-nginx controller and
+# cert-manager are installed (see cluster-issuer.yaml).
+# Replace tracker.example.com with your real hostname before applying.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lottery-tracker-web
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # Per-client-IP soft brake against scraping/flooding.
+    nginx.ingress.kubernetes.io/limit-rps: "20"
+    nginx.ingress.kubernetes.io/limit-burst-multiplier: "3"
+    nginx.ingress.kubernetes.io/limit-connections: "20"
+    # Static site: no request bodies worth accepting.
+    nginx.ingress.kubernetes.io/proxy-body-size: "16k"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - tracker.example.com
+      secretName: lottery-tracker-tls
+  rules:
+    - host: tracker.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lottery-tracker-web
+                port:
+                  name: http

@@ -1,0 +1,17 @@
+# Free, auto-renewing HTTPS certificates from Let's Encrypt via cert-manager.
+# Cluster-wide resource: apply once per cluster (kubectl apply -f this file),
+# not part of the namespaced kustomization.
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: ncrowe175@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-prod-account-key
+    solvers:
+      - http01:
+          ingress:
+            ingressClassName: nginx

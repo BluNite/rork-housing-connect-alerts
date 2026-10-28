@@ -1,0 +1,29 @@
+# Default-deny for the whole namespace, then one narrow allow:
+# only the ingress controller may reach the web pods on 8080.
+# Egress stays fully blocked: a static nginx never needs to call out,
+# so a compromised pod cannot exfiltrate data or reach other services.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+spec:
+  podSelector: {}
+  policyTypes: ["Ingress", "Egress"]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-controller
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: lottery-tracker-web
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 8080

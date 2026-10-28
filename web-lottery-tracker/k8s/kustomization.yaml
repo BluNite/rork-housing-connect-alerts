@@ -1,0 +1,30 @@
+# Self-host on Kubernetes (optional; the live site runs on Rork hosting).
+#
+# One-time cluster prerequisites:
+#   - ingress-nginx controller  (namespace: ingress-nginx)
+#   - cert-manager              then: kubectl apply -f k8s/cluster-issuer.yaml
+#   - a CNI that enforces NetworkPolicy (Calico, Cilium, ...)
+#
+# Build + push the image (public client values only, never server secrets):
+#   docker build \
+#     --build-arg EXPO_PUBLIC_SUPABASE_URL=... \
+#     --build-arg EXPO_PUBLIC_SUPABASE_ANON_KEY=... \
+#     -t ghcr.io/OWNER/lottery-tracker-web:1.0.0 web-lottery-tracker
+#   docker push ghcr.io/OWNER/lottery-tracker-web:1.0.0
+#
+# Deploy (after setting the image below and the hostname in ingress.yaml):
+#   kubectl apply -k web-lottery-tracker/k8s
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: lottery-tracker
+resources:
+  - namespace.yaml
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+  - networkpolicy.yaml
+  - autoscaling.yaml
+images:
+  - name: lottery-tracker-web
+    newName: ghcr.io/OWNER/lottery-tracker-web
+    newTag: "1.0.0"

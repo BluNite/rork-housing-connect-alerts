@@ -72,17 +72,19 @@ export default function LotteryDetail() {
   return (
     <AppShell header={backLink}>
       <div className="grid gap-6 rise lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
-        <div className="flex h-[300px] flex-col overflow-hidden rounded-2xl border lg:h-auto lg:min-h-[300px]">
+        {/* Photo and map are separate rounded cards with the same 16/24px
+            gutter rhythm as the surrounding grid (tighter on phones). */}
+        <div className="flex flex-col gap-4 sm:gap-6 lg:h-auto">
           {l.photo && (
             <img
               src={l.photo}
               alt={`Photo of ${l.name}`}
               loading="lazy"
               decoding="async"
-              className="h-[150px] w-full shrink-0 border-b border-border object-cover"
+              className="h-[180px] w-full shrink-0 rounded-2xl border object-cover sm:h-[210px] lg:h-[230px]"
             />
           )}
-          <div className="relative min-h-[130px] flex-1">
+          <div className="relative h-[170px] overflow-hidden rounded-2xl border lg:h-auto lg:min-h-[140px] lg:flex-1">
             <LotteryMap lotteries={[l]} savedIds={s ? [l.id] : []} zoomControl={false} interactive={false} />
           </div>
         </div>

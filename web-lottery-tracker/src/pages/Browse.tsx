@@ -62,9 +62,19 @@ export function LotteryCard({ l }: { l: Lottery }) {
       to={`/lottery/${l.id}`}
       className="panel group flex items-start gap-4 p-5 transition-all hover:-translate-y-px hover:border-primary/30 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-accent text-primary">
-        <Building2 className="h-5 w-5" />
-      </span>
+      {l.photo ? (
+        <img
+          src={l.photo}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="h-20 w-20 shrink-0 rounded-2xl border border-border object-cover sm:h-[72px] sm:w-[72px]"
+        />
+      ) : (
+        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-accent text-primary">
+          <Building2 className="h-5 w-5" />
+        </span>
+      )}
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
           <h3 className="text-lg font-bold leading-snug group-hover:text-primary">{l.name}</h3>

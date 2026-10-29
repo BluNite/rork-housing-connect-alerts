@@ -1,3 +1,2 @@
 # Authorized digital sellers for this site (ads.txt standard, IAB).
-# Add the Google line below once AdSense approves the site — it looks like:
-# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+google.com, pub-7697385175735400, DIRECT, f08c47fec0942fa0

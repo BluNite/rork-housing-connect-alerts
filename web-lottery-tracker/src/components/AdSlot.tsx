@@ -6,8 +6,8 @@ import { useStore } from "@/lib/store";
 const CONSENT_KEY = "ltn:cookie-consent";
 export type AdConsent = "all" | "essential" | "unknown";
 
-/** Your AdSense publisher ID. Empty = house ads only. Set to "ca-pub-…" once Google approves the site. */
-const ADSENSE_CLIENT = "";
+/** Your AdSense publisher ID. Empty = house ads only. */
+const ADSENSE_CLIENT: string = "ca-pub-7697385175735400";
 /** Optional per-slot unit ID from the AdSense dashboard ("" = auto unit sizing). */
 const ADSENSE_SLOT_ID = "";
 

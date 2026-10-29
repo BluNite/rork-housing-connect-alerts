@@ -1,0 +1,27 @@
+# Render Blueprint — self-hosts the web app at housinglotteryalerts.com.
+# Render → New → Blueprint → pick this GitHub repo. It reads this file.
+#
+# Only PUBLIC values live here (the Supabase URL + publishable key are
+# already visible in every visitor's browser by design). Stripe and Resend
+# secrets stay in Supabase edge functions and never touch this server.
+services:
+  - type: web
+    name: nyc-lottery-tracker
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./web-lottery-tracker/Dockerfile
+    dockerContext: ./web-lottery-tracker
+    healthCheckPath: /healthz
+    autoDeploy: true
+    domains:
+      - housinglotteryalerts.com
+      - www.housinglotteryalerts.com
+    envVars:
+      # nginx inside the container listens on 8080 (non-root image).
+      - key: PORT
+        value: "8080"
+      # Render passes service env vars to `docker build` as build args.
+      - key: EXPO_PUBLIC_SUPABASE_URL
+        value: https://dwtwixltasvnkmsortqx.supabase.co
+      - key: EXPO_PUBLIC_SUPABASE_ANON_KEY
+        value: sb_publishable_sTxP9e-dXaEEd4Yj4Y20aQ_MvDK6j40

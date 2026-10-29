@@ -13,7 +13,7 @@ mkdir -p "$(dirname "$OUT")"
 # no installed packages, no build output, no local env files, no Rork state.
 mkdir -p /tmp/ltsrc
 rm -rf /tmp/ltsrc/*
-cp -r README.md .gitignore .github rork.json backend /tmp/ltsrc/
+cp -r README.md .gitignore .github rork.json render.yaml backend /tmp/ltsrc/
 mkdir -p /tmp/ltsrc/web-lottery-tracker
 # Copy the web app minus node_modules, dist, and local env files.
 tar -C web-lottery-tracker --exclude=node_modules --exclude=dist \

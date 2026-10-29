@@ -8,12 +8,16 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
 };
 
+/** Self-hosted production domains (Render). Exact matches only. */
+const OWN_HOSTS = new Set(["housinglotteryalerts.com", "www.housinglotteryalerts.com"]);
+
 /** Where Stripe sends the user back. Only same-product origins are accepted. */
 function safeOrigin(req: Request): string {
   const origin = req.headers.get("origin") ?? "";
-  const fallback = "https://housing-lottery-tracker.rork.app";
+  const fallback = "https://housinglotteryalerts.com";
   try {
     const u = new URL(origin);
+    if (OWN_HOSTS.has(u.hostname) && u.protocol === "https:") return origin;
     if (u.hostname.endsWith(".rork.live") || u.hostname.endsWith(".rork.app") || u.hostname === "localhost") return origin;
   } catch {
     /* fall through */

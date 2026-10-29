@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { BrandMark } from "./BrandMark";
+import { BrandName } from "./BrandName";
 import { DedicationRibbon } from "@/pages/Privacy";
 import { cn } from "@/lib/utils";
 
@@ -34,7 +35,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           <BrandMark className="h-9 w-9" />
         </span>
         <div>
-          <div className="text-[17px] font-bold leading-tight tracking-tight">Lottery Tracker</div>
+          <BrandName className="block text-[17px] font-bold leading-tight tracking-tight" />
           <div className="mt-1 text-xs leading-snug text-white/60">NYC affordable housing alerts</div>
         </div>
       </Link>

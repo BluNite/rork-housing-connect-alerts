@@ -9,7 +9,7 @@ export function downloadIcs(tasks: Task[]) {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Lottery Tracker NYC//EN",
+    "PRODID:-//NYC Lottery Tracker//EN",
     "CALSCALE:GREGORIAN",
     ...open.flatMap((t) => {
       const due = effectiveDue(t);

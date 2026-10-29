@@ -368,7 +368,7 @@ export default function Account() {
 
       <section className="panel mt-6 flex flex-wrap items-center justify-between gap-4 p-5">
         <div>
-          <div className="font-semibold">Sign out of Lottery Tracker</div>
+          <div className="font-semibold">Sign out of NYC Lottery Tracker</div>
           <p className="text-sm text-muted-foreground">Ends your session on this device. Your alerts stay safe in your account.</p>
         </div>
         <Button

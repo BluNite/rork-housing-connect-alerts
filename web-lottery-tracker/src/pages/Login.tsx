@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { isLocked, msLeft, recordFailure, clearFailures, cooldownMessage } from "@/lib/authThrottle";
 import { BrandMark } from "@/components/BrandMark";
+import { BrandName } from "@/components/BrandName";
 import { DedicationRibbon } from "@/pages/Privacy";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -108,7 +109,7 @@ export default function Login() {
           <div className="rounded-xl bg-background p-1.5">
             <BrandMark className="h-9 w-9" />
           </div>
-          <span className="text-lg font-bold tracking-tight">Lottery Tracker</span>
+          <BrandName className="text-lg font-bold tracking-tight" />
         </div>
 
         <div className="my-auto max-w-xl">
@@ -165,7 +166,7 @@ export default function Login() {
         <div className="w-full max-w-sm rise">
           <div className="mb-8 flex items-center gap-3 lg:hidden">
             <BrandMark className="h-10 w-10" />
-            <span className="text-lg font-bold">Lottery Tracker</span>
+            <BrandName className="text-lg font-bold" />
           </div>
           {sentTo ? (
             <div className="rise">

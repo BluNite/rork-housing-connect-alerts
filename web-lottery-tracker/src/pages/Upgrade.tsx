@@ -32,7 +32,7 @@ export default function Upgrade() {
   }
 
   return (
-    <AppShell header={<PageTitle title="Choose your plan" subtitle="Use Lottery Tracker free with ads, or go ad-free with Pro." />}>
+    <AppShell header={<PageTitle title="Choose your plan" subtitle="Use NYC Lottery Tracker free with ads, or go ad-free with Pro." />}>
       <div className="grid gap-5 md:grid-cols-2">
         <section className="panel p-6">
           <h2 className="font-display text-2xl font-semibold">Free</h2>

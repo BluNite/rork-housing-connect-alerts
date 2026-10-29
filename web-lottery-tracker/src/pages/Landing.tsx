@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BellRing, CalendarCheck, ChevronDown, ListChecks, Map, ShieldCheck, Sparkles, X } from "lucide-react";
 import { BrandMark } from "@/components/BrandMark";
+import { BrandName } from "@/components/BrandName";
 import { DedicationRibbon } from "./Privacy";
 import { Reveal } from "@/components/Reveal";
 
@@ -148,7 +149,7 @@ export default function Landing() {
             <span className="grid h-10 w-10 place-items-center rounded-xl bg-white/95 shadow-sm">
               <BrandMark className="h-8 w-8" />
             </span>
-            <span className="text-[15px] font-bold tracking-tight drop-shadow-sm">Lottery Tracker</span>
+            <BrandName className="text-[15px] font-bold tracking-tight drop-shadow-sm" />
           </Link>
           <nav className="flex items-center gap-2 sm:gap-4">
             <a href="#features" className="hidden rounded-lg px-3 py-2 text-sm font-medium text-white/80 transition hover:bg-white/10 hover:text-white sm:block">
@@ -229,7 +230,7 @@ export default function Landing() {
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-base leading-relaxed text-muted-foreground sm:text-lg">
             Dozens of affordable lotteries are open across New York at any moment — and each closes within weeks.
-            Lottery Tracker watches them all and puts your deadlines on one calm checklist, so the home you're
+            NYC Lottery Tracker watches them all and puts your deadlines on one calm checklist, so the home you're
             waiting for never slips past you.
           </p>
         </Reveal>

@@ -27,7 +27,7 @@ export function Privacy() {
           <span className="grid h-11 w-11 place-items-center rounded-xl bg-card shadow-sm ring-1 ring-border">
             <BrandMark className="h-8 w-8" />
           </span>
-          <span className="font-bold">Lottery Tracker</span>
+          <span className="font-bold">NYC Lottery Tracker</span>
         </Link>
         <h1 className="font-display text-grad mt-8 text-4xl font-semibold">Privacy policy</h1>
         <p className="mt-2 text-muted-foreground">Last updated October 27, 2026</p>
@@ -79,7 +79,7 @@ export function Privacy() {
         </Section>
 
         <Link to="/" className="mt-10 inline-block font-semibold text-primary hover:underline">
-          ← Back to Lottery Tracker
+          ← Back to NYC Lottery Tracker
         </Link>
         <div className="mt-8 flex flex-col items-center gap-2.5">
           <RibbonIcon className="h-6 w-6 text-primary/70" />

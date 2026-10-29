@@ -12,6 +12,14 @@ const ADSENSE_CLIENT: string = "ca-pub-7697385175735400";
 const ADSENSE_SLOT_ID = "";
 
 /**
+ * Inside the Android app shell (its WebView adds this user-agent marker) AdSense
+ * is not allowed by Google policy without the Mobile Ads WebView API, so the
+ * app shows only the first-party house ad until that is set up.
+ */
+const IN_ANDROID_APP =
+  typeof navigator !== "undefined" && navigator.userAgent.includes("NYCLotteryTrackerAndroid");
+
+/**
  * Cookie-consent state for ads. Third-party ad scripts may only load on "all";
  * "essential" and undecided mean no partner script and no partner cookie.
  * (See .rork/ads-standard.md §4.)
@@ -75,7 +83,7 @@ declare global {
 export function AdSlot({ className }: { className?: string }) {
   const { user } = useStore();
   const consent = useAdConsent();
-  const partner = consent === "all" && ADSENSE_CLIENT !== "";
+  const partner = consent === "all" && ADSENSE_CLIENT !== "" && !IN_ANDROID_APP;
   useAdSenseLoader(partner);
   const [unitMounted, setUnitMounted] = useState(false);
 

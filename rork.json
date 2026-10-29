@@ -10,6 +10,11 @@
       "name": "Backend",
       "path": "backend",
       "framework": "supabase"
+    },
+    {
+      "name": "NYC Lottery Tracker Android",
+      "path": "android-nyc-lottery-tracker-an",
+      "framework": "kotlin"
     }
   ]
 }

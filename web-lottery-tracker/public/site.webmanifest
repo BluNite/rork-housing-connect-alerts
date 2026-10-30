@@ -1,0 +1,15 @@
+{
+  "name": "NYC Lottery Tracker",
+  "short_name": "Lottery Tracker",
+  "description": "Save NYC affordable housing lotteries and get deadline reminders so you never miss an application.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F8FAFD",
+  "theme_color": "#1E6FE8",
+  "icons": [
+    { "src": "/favicon.png", "sizes": "48x48", "type": "image/png" },
+    { "src": "/icon.png", "sizes": "any", "type": "image/png", "purpose": "any" },
+    { "src": "/icon.png", "sizes": "any", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -210,6 +210,43 @@ const FALLBACK: Lottery[] = [
   },
 ];
 
+/*
+ * The Housing Connect endpoint doesn't send cacheable HTTP headers, so a cold
+ * start always pays the full network round-trip. To make repeat opens feel
+ * instant (especially in the Android app's WebView), the last good list is
+ * persisted to localStorage and shown immediately while a fresh fetch runs in
+ * the background. Kept for 7 days, max; anything older is ignored.
+ */
+const CACHE_KEY = "ltn:lotteries-cache";
+const CACHE_MAX_AGE_MS = 1000 * 60 * 60 * 24 * 7;
+
+interface LotteryCacheEntry {
+  lotteries: Lottery[];
+  savedAt: number;
+}
+
+function readLotteryCache(): { lotteries: Lottery[]; live: boolean } | undefined {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return undefined;
+    const entry = JSON.parse(raw) as LotteryCacheEntry;
+    if (!Array.isArray(entry?.lotteries) || entry.lotteries.length === 0) return undefined;
+    if (Date.now() - entry.savedAt > CACHE_MAX_AGE_MS) return undefined;
+    return { lotteries: entry.lotteries, live: true };
+  } catch {
+    return undefined;
+  }
+}
+
+function writeLotteryCache(lotteries: Lottery[]) {
+  try {
+    const entry: LotteryCacheEntry = { lotteries, savedAt: Date.now() };
+    localStorage.setItem(CACHE_KEY, JSON.stringify(entry));
+  } catch {
+    // Storage full or unavailable — caching is a nice-to-have, never fatal.
+  }
+}
+
 async function fetchLotteries(): Promise<{ lotteries: Lottery[]; live: boolean }> {
   try {
     const res = await fetch(SEARCH_URL, {
@@ -224,6 +261,7 @@ async function fetchLotteries(): Promise<{ lotteries: Lottery[]; live: boolean }
       ...(json.sales ?? []).map((r) => normalize(r, "Sales")),
     ];
     if (!lotteries.length) throw new Error("Empty response");
+    writeLotteryCache(lotteries);
     return { lotteries, live: true };
   } catch {
     return { lotteries: FALLBACK, live: false };
@@ -235,6 +273,9 @@ export function useLotteries() {
     queryKey: ["lotteries"],
     queryFn: fetchLotteries,
     staleTime: 1000 * 60 * 15,
+    // Stale-while-revalidate: render the cached list immediately on mount;
+    // the background fetch swaps in the fresh data when it lands.
+    placeholderData: () => readLotteryCache(),
   });
 }
 

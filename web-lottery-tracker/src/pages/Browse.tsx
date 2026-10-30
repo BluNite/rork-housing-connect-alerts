@@ -95,6 +95,9 @@ export function LotteryCard({ l }: { l: Lottery }) {
 
 export default function Browse() {
   const { data, isLoading } = useLotteries();
+  // While a cached list is shown (placeholderData), keep the chrome calm — no
+  // skeletons or "Loading…" even though a background refresh is in flight.
+  const firstLoad = isLoading && !data;
   const { saved } = useStore();
   const navigate = useNavigate();
   const [boroughs, setBoroughs] = useState<Borough[]>([]);
@@ -196,7 +199,7 @@ export default function Browse() {
 
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="text-xl font-bold tabular">
-              {isLoading ? "Loading lotteries…" : `${results.length} ${results.length === 1 ? "lottery" : "lotteries"} found`}
+              {firstLoad ? "Loading lotteries…" : `${results.length} ${results.length === 1 ? "lottery" : "lotteries"} found`}
               {!isLoading && <span className="ml-2 text-sm font-normal text-muted-foreground">{openCount} accepting applications</span>}
             </h2>
             <div className="flex items-center gap-3">
@@ -261,7 +264,7 @@ export default function Browse() {
           )}
 
           <div className="space-y-3">
-            {isLoading &&
+            {firstLoad &&
               Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-[118px] rounded-2xl" />)}
             {results.map((l) => (
               <LotteryCard key={l.id} l={l} />

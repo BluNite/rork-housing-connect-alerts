@@ -74,7 +74,12 @@ private fun SiteWebView(onRendererGone: () -> Unit) {
     val webView = remember {
         buildWebView(
             context = context,
-            onProgress = { progress = it },
+            onProgress = {
+                progress = it
+                // Reveal the page as soon as it's substantially rendered instead of
+                // waiting for every image — a big win for perceived cold-start speed.
+                if (!firstLoadDone && it >= 75 && failure == null) firstLoadDone = true
+            },
             onFinished = { view ->
                 if (failure == null) firstLoadDone = true
                 canGoBack = view.canGoBack()
@@ -171,6 +176,7 @@ private fun buildWebView(
         setSupportMultipleWindows(false)
         javaScriptCanOpenWindowsAutomatically = false
         mediaPlaybackRequiresUserGesture = true
+        cacheMode = WebSettings.LOAD_DEFAULT
         userAgentString = "$userAgentString ${SiteConfig.UA_MARKER}"
     }
     CookieManager.getInstance().setAcceptCookie(true)

@@ -1,6 +1,8 @@
 <div align="center">
 
-# <samp> **NYC HousingConnectApi Alerts/Tracker/Planner** </samp>
+# <samp> ***HousingConect***
+***API***  
+***get Alerts/Track/Plan***</samp>
 
 
 **Every affordable housing lottery in New York City, saved to one calm checklist — with reminders before the deadlines close.**

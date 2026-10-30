@@ -1,6 +1,7 @@
 <div align="center">
 
-# <samp>**NYC**</samp> Lottery Tracker
+# <samp>**NYC Housing Connect Api Alert/Apt_Tacker/Planner**</samp>
+
 
 **Every affordable housing lottery in New York City, saved to one calm checklist — with reminders before the deadlines close.**
 

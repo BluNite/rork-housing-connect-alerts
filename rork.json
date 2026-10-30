@@ -12,7 +12,7 @@
       "framework": "supabase"
     },
     {
-      "name": "NYC Lottery Tracker Android",
+      "name": "NYC Housing LotteryAPI Alerts Android 1.0",
       "path": "android-nyc-lottery-tracker-an",
       "framework": "kotlin"
     }

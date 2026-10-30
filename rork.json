@@ -2,7 +2,7 @@
   "$schema": "https://rork.com/schema/rork.json",
   "apps": [
     {
-      "name": "Lottery Tracker",
+      "name": "NYC Housing LotteryAPI Alerts",
       "path": "web-lottery-tracker",
       "framework": "web"
     },

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Megaphone, Sparkles } from "lucide-react";
 import { useStore } from "@/lib/store";
+import { PRO_SALES_PAUSED } from "@/lib/flags";
 
 const CONSENT_KEY = "ltn:cookie-consent";
 export type AdConsent = "all" | "essential" | "unknown";
@@ -97,6 +98,9 @@ export function AdSlot({ className }: { className?: string }) {
   }, [unitMounted]);
 
   if (!user || user.plan === "pro") return null;
+  // While Pro sales are paused the house ad (an upgrade pitch) must not show;
+  // partner units still render on full consent once AdSense is approved.
+  if (PRO_SALES_PAUSED && !partner) return null;
   return (
     // Reserved height: the ad unit loads into this box without shifting the
     // page (ads-standard.md §3).

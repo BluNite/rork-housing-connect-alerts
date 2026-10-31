@@ -16,6 +16,7 @@ import { BrandMark } from "./BrandMark";
 import { BrandName } from "./BrandName";
 import { DedicationRibbon } from "@/pages/Privacy";
 import { cn } from "@/lib/utils";
+import { PRO_SALES_PAUSED } from "@/lib/flags";
 
 const NAV = [
   { to: "/", label: "My Alerts", icon: Bell, end: true },
@@ -60,7 +61,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           );
         })}
       </nav>
-      {!isPro && (
+      {!isPro && !PRO_SALES_PAUSED && (
         <Link
           to="/upgrade"
           onClick={onNavigate}
@@ -149,7 +150,7 @@ function UserMenu() {
           <div className="truncate text-xs text-muted-foreground">{user.email}</div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {!isPro && (
+        {!isPro && !PRO_SALES_PAUSED && (
           <DropdownMenuItem onClick={() => navigate("/upgrade")} className="font-semibold text-warn-ink focus:text-warn-ink">
             <Sparkles className="mr-2 h-4 w-4" /> Go Pro — ad-free
           </DropdownMenuItem>

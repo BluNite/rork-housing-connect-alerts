@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { AppShell, PageTitle } from "@/components/AppShell";
 import { useStore, STATUS_LABEL } from "@/lib/store";
 import { useDevicePrefs, setIdleTimeoutMinutes, setHaptics, buzz, IDLE_OPTIONS } from "@/lib/devicePrefs";
+import { PRO_SALES_PAUSED } from "@/lib/flags";
 import { fmtDate } from "@/lib/dates";
 import { downloadIcs } from "@/lib/reminders";
 import { Button } from "@/components/ui/button";
@@ -187,7 +188,7 @@ export default function Account() {
                   )}
                 </div>
                 <div className="truncate text-sm text-muted-foreground">{user?.email}</div>
-                {user?.plan !== "pro" && (
+                {user?.plan !== "pro" && !PRO_SALES_PAUSED && (
                   <Link to="/upgrade" className="mt-1 inline-flex items-center gap-1 text-[13px] font-semibold text-primary hover:underline">
                     <Sparkles className="h-3.5 w-3.5" /> Go ad-free with Pro
                   </Link>
@@ -356,10 +357,12 @@ export default function Account() {
               </>
             ) : (
               <>
-                <p className="text-sm text-muted-foreground">You're on Free, which shows ads. Go ad-free for $4/mo or $24/yr.</p>
-                <Button className="w-full" onClick={() => navigate("/upgrade")}>
-                  <Sparkles className="h-4 w-4" /> Upgrade to Pro
-                </Button>
+                <p className="text-sm text-muted-foreground">You're on Free{PRO_SALES_PAUSED ? ", which shows ads." : ", which shows ads. Go ad-free for $4/mo or $24/yr."}</p>
+                {!PRO_SALES_PAUSED && (
+                  <Button className="w-full" onClick={() => navigate("/upgrade")}>
+                    <Sparkles className="h-4 w-4" /> Upgrade to Pro
+                  </Button>
+                )}
               </>
             )}
           </section>

@@ -20,7 +20,17 @@ tar -C web-lottery-tracker --exclude=node_modules --exclude=dist \
    --exclude='public/downloads' --exclude='.env' --exclude='.env.*' \
    -cf - . | tar -C /tmp/ltsrc/web-lottery-tracker -xf -
 mkdir -p "$(dirname "$OUT")"
-cd /tmp/ltsrc && tar -czf "$OLDPWD/$OUT" . && cd - >/dev/null
+# A real zip (not a renamed tar.gz): Python's zipfile, since no `zip` binary
+# exists in the sandbox. Walks /tmp/ltsrc so the tar-stage exclusions apply.
+cd /tmp/ltsrc && python3 - "$OLDPWD/$OUT" <<'PYEOF' && cd - >/dev/null
+import os, sys, zipfile
+out = sys.argv[1]
+with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+    for root, dirs, files in os.walk("."):
+        dirs[:] = [d for d in dirs if d not in {".git", "node_modules", "dist"}]
+        for f in files:
+            z.write(os.path.join(root, f))
+PYEOF
 
 echo "Created $OUT"
-tar -tzf "$OUT" | wc -l
+unzip -l "$OUT" | tail -1

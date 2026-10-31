@@ -7,6 +7,7 @@ import { AddReminderDialog } from "@/components/AddReminderDialog";
 import { useStore, effectiveDue, type Task } from "@/lib/store";
 import { daysUntil, fmtDate, fmtTime } from "@/lib/dates";
 import { downloadIcs, notificationsSupported } from "@/lib/reminders";
+import { PRO_SALES_PAUSED } from "@/lib/flags";
 import { Button } from "@/components/ui/button";
 import { AdSlot } from "@/components/AdSlot";
 import { ProCard } from "@/components/ProCard";
@@ -128,7 +129,7 @@ export default function Alerts() {
     <AppShell header={<PageTitle title={`${greeting()}, ${user?.name.split(" ")[0]}`} subtitle="Here's what's happening with your saved lotteries." />}>
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_370px]">
         <div className="space-y-5">
-          {user?.plan !== "pro" && (
+          {user?.plan !== "pro" && !PRO_SALES_PAUSED && (
             <section
               aria-label="Upgrade to Pro"
               className="grad-orange flex flex-wrap items-center justify-between gap-3 rounded-2xl px-5 py-4 text-white shadow-sm"

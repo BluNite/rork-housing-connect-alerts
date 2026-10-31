@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { openStripe } from "@/lib/openStripe";
+import { PRO_SALES_PAUSED } from "@/lib/flags";
 
 const PERKS = ["No ads, anywhere", "Same features, zero clutter", "Cancel anytime"];
 
@@ -31,7 +32,7 @@ export function ProCard({ className }: { className?: string }) {
     }
   }
 
-  if (isPro) return null;
+  if (isPro || PRO_SALES_PAUSED) return null;
 
   return (
     <section

@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { PRO_SALES_PAUSED } from "@/lib/flags";
 import { openStripe } from "@/lib/openStripe";
 
 const FREE = ["Browse every live lottery", "Save lotteries & deadline alerts", "Map, calendar & countdowns", "Sync across devices", "Supported by ads"];
@@ -77,6 +78,11 @@ export default function Upgrade() {
             <Button variant="outline" className="mt-6 w-full border-white/40 bg-white/10 text-white hover:bg-white/20 hover:text-white" onClick={() => navigate("/account")}>
               You're on Pro — manage in Account
             </Button>
+          ) : PRO_SALES_PAUSED ? (
+            <div className="mt-6 rounded-xl bg-white/10 px-4 py-3 text-sm leading-snug">
+              <p className="font-semibold">Pro subscriptions are temporarily closed</p>
+              <p className="mt-1 opacity-85">We're opening them again soon. Everything stays free with ads in the meantime.</p>
+            </div>
           ) : (
             <div className="mt-6 grid gap-2">
               <Button variant="outline" className="w-full border-white/40 bg-white text-primary hover:bg-white/90" disabled={!!busy} onClick={() => checkout("monthly")}>

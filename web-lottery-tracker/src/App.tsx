@@ -20,6 +20,7 @@ import Upgrade from "./pages/Upgrade";
 import Login from "./pages/Login";
 import Landing from "./pages/Landing";
 import { Privacy } from "./pages/Privacy";
+import { Guides, GuideArticle } from "./pages/Guides";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -96,6 +97,9 @@ function Gate() {
     return (
       <Routes>
         <Route path="/privacy" element={<Privacy />} />
+        {/* Guides are crawlable/reviewable without an account (AdSense §B). */}
+        <Route path="/guides" element={<Guides />} />
+        <Route path="/guides/:slug" element={<GuideArticle />} />
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<Landing />} />
       </Routes>
@@ -110,6 +114,8 @@ function Gate() {
         <Route path="/browse" element={<Browse />} />
         <Route path="/lottery/:id" element={<LotteryDetail />} />
         <Route path="/calendar" element={<CalendarPage />} />
+        <Route path="/guides" element={<Guides />} />
+        <Route path="/guides/:slug" element={<GuideArticle />} />
         <Route path="/account" element={<Account />} />
         <Route path="/upgrade" element={<Upgrade />} />
         <Route path="*" element={<NotFound />} />

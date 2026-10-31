@@ -301,6 +301,9 @@ export default function Landing() {
           <p className="text-[13px] text-muted-foreground">
             Listings from NYC Housing Connect. Not affiliated with NYC HPD or Housing Connect. Always apply on the
             official site.{" "}
+            <Link to="/guides" className="font-semibold text-primary underline-offset-2 hover:underline">
+              Housing guides
+            </Link>
             <Link to="/privacy" className="font-semibold text-primary underline-offset-2 hover:underline">
               Privacy
             </Link>

@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { Bell, CalendarDays, ChevronDown, LogOut, Menu, Search, Sparkles, User as UserIcon } from "lucide-react";
+import { Bell, BookOpen, CalendarDays, ChevronDown, LogOut, Menu, Search, Sparkles, User as UserIcon } from "lucide-react";
 import { useStore, effectiveDue } from "@/lib/store";
 import { notificationsSupported } from "@/lib/reminders";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
@@ -22,6 +22,7 @@ const NAV = [
   { to: "/", label: "My Alerts", icon: Bell, end: true },
   { to: "/browse", label: "Browse Lotteries", icon: Search, end: false },
   { to: "/calendar", label: "Calendar", icon: CalendarDays, end: false },
+  { to: "/guides", label: "Guides", icon: BookOpen, end: false },
   { to: "/account", label: "Account", icon: UserIcon, end: false },
 ];
 

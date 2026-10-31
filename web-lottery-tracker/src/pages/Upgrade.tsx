@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { Check, Loader2, Sparkles } from "lucide-react";
 import { AppShell, PageTitle } from "@/components/AppShell";
 import { useStore } from "@/lib/store";
@@ -15,6 +15,9 @@ const PRO = ["Everything in Free", "No ads, anywhere", "Priority early access to
 
 export default function Upgrade() {
   const { user } = useStore();
+  // While Pro sales are paused the plans page is closed entirely — no baiting,
+  // just the free service. Flipping PRO_SALES_PAUSED restores this page.
+  if (PRO_SALES_PAUSED) return <Navigate to="/" replace />;
   const navigate = useNavigate();
   const [busy, setBusy] = useState<string | null>(null);
   const isPro = user?.plan === "pro";

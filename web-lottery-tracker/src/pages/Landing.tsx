@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { BellRing, CalendarCheck, ChevronDown, ListChecks, Map, ShieldCheck, Sparkles, X } from "lucide-react";
 import { BrandMark } from "@/components/BrandMark";
 import { BrandName } from "@/components/BrandName";
-import { DedicationRibbon } from "./Privacy";
 import { Reveal } from "@/components/Reveal";
+import { DedicationRibbon } from "./Privacy";
+import { PRO_SALES_PAUSED } from "@/lib/flags";
 
 const FEATURES = [
   {
@@ -158,13 +159,15 @@ export default function Landing() {
             <a href="#how" className="hidden rounded-lg px-3 py-2 text-sm font-medium text-white/80 transition hover:bg-white/10 hover:text-white sm:block">
               How it works
             </a>
-            <Link
-              to="/login"
-              aria-label="Go Pro — upgrade to the ad-free plan"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-warn px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:-translate-y-px hover:shadow"
-            >
-              <Sparkles className="h-4 w-4" aria-hidden /> Go Pro
-            </Link>
+            {!PRO_SALES_PAUSED && (
+              <Link
+                to="/login"
+                aria-label="Go Pro — upgrade to the ad-free plan"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-warn px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:-translate-y-px hover:shadow"
+              >
+                <Sparkles className="h-4 w-4" aria-hidden /> Go Pro
+              </Link>
+            )}
             <Link
               to="/login"
               className="rounded-xl bg-white px-4 py-2 text-sm font-bold text-[#1e6fe8] shadow-sm transition hover:-translate-y-px hover:shadow"
@@ -315,7 +318,7 @@ export default function Landing() {
         </div>
       </footer>
 
-      <ProFlashCard />
+      {!PRO_SALES_PAUSED && <ProFlashCard />}
       <DedicationRibbon />
     </div>
   );
